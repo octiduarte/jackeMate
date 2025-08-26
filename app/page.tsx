@@ -16,19 +16,25 @@ export default function HomePage() {
                 <MapPin className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-foreground">Posadas Reporta</h1>
+                <h1 className="text-xl font-bold text-foreground">PosaCalles</h1>
                 <p className="text-sm text-muted-foreground">Mejoremos nuestra ciudad juntos</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm" asChild>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Button variant="outline" size="sm" className="hidden sm:flex" asChild>
                 <Link href="/dashboard">Mi Dashboard</Link>
               </Button>
-              <Button variant="outline" size="sm" asChild>
-                <Link href="/auth">Iniciar Sesión</Link>
+              <Button variant="outline" size="sm" className="text-xs sm:text-sm px-2 sm:px-3" asChild>
+                <Link href="/auth">
+                  <span className="hidden sm:inline">Iniciar Sesión</span>
+                  <span className="sm:hidden">Entrar</span>
+                </Link>
               </Button>
-              <Button size="sm" asChild>
-                <Link href="/auth">Registrarse</Link>
+              <Button size="sm" className="text-xs sm:text-sm px-2 sm:px-3" asChild>
+                <Link href="/auth">
+                  <span className="hidden sm:inline">Registrarse</span>
+                  <span className="sm:hidden">Registro</span>
+                </Link>
               </Button>
             </div>
           </div>
@@ -78,7 +84,6 @@ export default function HomePage() {
             </div>
             <Button variant="outline" asChild>
               <Link href="/reportes">
-                <Filter className="w-4 h-4 mr-2" />
                 Ver Todos
               </Link>
             </Button>
@@ -202,7 +207,7 @@ export default function HomePage() {
                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                   <MapPin className="w-5 h-5 text-primary-foreground" />
                 </div>
-                <span className="font-bold text-foreground">Posadas Reporta</span>
+                <span className="font-bold text-foreground">PosaCalles</span>
               </div>
               <p className="text-sm text-muted-foreground">
                 Plataforma ciudadana para reportar y dar seguimiento a problemas públicos en Posadas, Misiones.
@@ -270,7 +275,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; 2024 Posadas Reporta. Hecho con ❤️ para la comunidad posadeña.</p>
+            <p>&copy; 2024 PosaCalles. Hecho con ❤️ para la comunidad posadeña.</p>
           </div>
         </div>
       </footer>

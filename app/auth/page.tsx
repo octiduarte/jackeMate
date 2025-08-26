@@ -56,7 +56,7 @@ export default function AuthPage() {
             <ArrowLeft className="h-4 w-4" />
             Volver al inicio
           </Link>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Posadas Reporta</h1>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">PosaCalles</h1>
           <p className="text-slate-600">Únete a la comunidad y ayuda a mejorar nuestra ciudad</p>
         </div>
 

@@ -121,7 +121,7 @@ export default function ReporteDetallePage({ params }: { params: { id: string } 
                   <MapPin className="w-6 h-6 text-primary-foreground" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-foreground">Posadas Reporta</h1>
+                  <h1 className="text-xl font-bold text-foreground">PosaCalles</h1>
                   <p className="text-sm text-muted-foreground">Detalle del Reporte</p>
                 </div>
               </Link>
@@ -330,25 +330,6 @@ export default function ReporteDetallePage({ params }: { params: { id: string } 
                     <MapPin className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">Mapa Interactivo</p>
                     <p className="text-xs text-muted-foreground">Próximamente</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Related Reports */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Reportes Similares</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="p-3 border rounded-lg">
-                    <p className="text-sm font-medium">Bache en Av. Mitre</p>
-                    <p className="text-xs text-muted-foreground">Centro • Hace 2 días</p>
-                  </div>
-                  <div className="p-3 border rounded-lg">
-                    <p className="text-sm font-medium">Deterioro en Av. López y Planes</p>
-                    <p className="text-xs text-muted-foreground">Centro • Hace 1 semana</p>
                   </div>
                 </div>
               </CardContent>
