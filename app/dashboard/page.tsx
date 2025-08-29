@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { MapPin, Plus, Calendar } from "lucide-react"
 import Link from "next/link"
+import { LogoutButton } from "@/components/logout-button"
 
 // Mock user data
 const mockUser = {
@@ -109,6 +110,7 @@ export default function DashboardPage() {
                   Nuevo Reporte
                 </Link>
               </Button>
+              <LogoutButton size="sm" />
             </div>
           </div>
         </div>

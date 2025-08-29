@@ -1,3 +1,5 @@
+"use client"
+import { useAuth } from "@/hooks/useAuth"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -5,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { MapPin, Plus, Search, Calendar, User } from "lucide-react"
 import Link from "next/link"
+import { LogoutButton } from "@/components/logout-button"
 
 // Mock data for reports
 const mockReports = [
@@ -73,6 +76,7 @@ const getStatusColor = (status: string) => {
 }
 
 export default function ReportesPage() {
+  const { user, loading } = useAuth()
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -91,15 +95,30 @@ export default function ReportesPage() {
               </Link>
             </div>
             <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm">
-                Iniciar Sesión
-              </Button>
-              <Button asChild size="sm">
-                <Link href="/reportes/nuevo">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Nuevo Reporte
-                </Link>
-              </Button>
+              {!loading && user && (
+                <>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href="/dashboard">Mi Dashboard</Link>
+                  </Button>
+                  <Button asChild size="sm">
+                    <Link href="/reportes/nuevo">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Nuevo Reporte
+                    </Link>
+                  </Button>
+                  <LogoutButton size="sm" />
+                </>
+              )}
+              {!loading && !user && (
+                <>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href="/auth">Iniciar Sesión</Link>
+                  </Button>
+                  <Button size="sm" asChild>
+                    <Link href="/auth">Registrarse</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

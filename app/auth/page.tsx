@@ -3,6 +3,8 @@
 import type React from "react"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { supabase } from "@/lib/supabaseClient"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -13,35 +15,97 @@ import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
 export default function AuthPage() {
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const [info, setInfo] = useState("")
+
+  // Login state
+  const [loginEmail, setLoginEmail] = useState("")
+  const [loginPassword, setLoginPassword] = useState("")
+
+  // Register state
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [registerEmail, setRegisterEmail] = useState("")
+  const [phone, setPhone] = useState("")
+  const [registerPassword, setRegisterPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
     setError("")
+    setInfo("")
 
-    // Simular autenticación
-    setTimeout(() => {
+    try {
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: loginEmail,
+        password: loginPassword,
+      })
+
+      if (signInError) {
+        setError(signInError.message)
+        return
+      }
+
+      if (data.session) {
+        // Redirigir al dashboard
+        router.push("/dashboard")
+      } else {
+        setInfo("Inicio de sesión exitoso. Continúa a tu cuenta.")
+      }
+    } catch (err: any) {
+      setError(err?.message ?? "Error al iniciar sesión")
+    } finally {
       setIsLoading(false)
-      // Aquí iría la lógica real de autenticación
-      console.log("[v0] Login attempt")
-    }, 1500)
+    }
   }
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
     setError("")
+    setInfo("")
 
-    // Simular registro
-    setTimeout(() => {
+    if (registerPassword !== confirmPassword) {
       setIsLoading(false)
-      // Aquí iría la lógica real de registro
-      console.log("[v0] Register attempt")
-    }, 1500)
+      setError("Las contraseñas no coinciden")
+      return
+    }
+
+    try {
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email: registerEmail,
+        password: registerPassword,
+        options: {
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            phone,
+          },
+        },
+      })
+
+      if (signUpError) {
+        setError(signUpError.message)
+        return
+      }
+
+      // Si el proyecto requiere confirmación por email, no habrá sesión
+      if (!data.session) {
+        setInfo("Cuenta creada. Revisa tu correo para confirmar tu email.")
+        return
+      }
+
+      router.push("/dashboard")
+    } catch (err: any) {
+      setError(err?.message ?? "Error al registrarse")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -83,6 +147,11 @@ export default function AuthPage() {
                   <AlertDescription className="text-red-700">{error}</AlertDescription>
                 </Alert>
               )}
+              {info && (
+                <Alert className="mb-4 border-emerald-200 bg-emerald-50">
+                  <AlertDescription className="text-emerald-700">{info}</AlertDescription>
+                </Alert>
+              )}
 
               {/* Login Tab */}
               <TabsContent value="login" className="space-y-4">
@@ -93,7 +162,15 @@ export default function AuthPage() {
                     </Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                      <Input id="login-email" type="email" placeholder="tu@email.com" className="pl-10" required />
+                      <Input
+                        id="login-email"
+                        type="email"
+                        placeholder="tu@email.com"
+                        className="pl-10"
+                        value={loginEmail}
+                        onChange={(e) => setLoginEmail(e.target.value)}
+                        required
+                      />
                     </div>
                   </div>
 
@@ -108,6 +185,8 @@ export default function AuthPage() {
                         type={showPassword ? "text" : "password"}
                         placeholder="••••••••"
                         className="pl-10 pr-10"
+                        value={loginPassword}
+                        onChange={(e) => setLoginPassword(e.target.value)}
                         required
                       />
                       <button
@@ -146,7 +225,15 @@ export default function AuthPage() {
                       </Label>
                       <div className="relative">
                         <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                        <Input id="register-name" type="text" placeholder="Juan" className="pl-10" required />
+                        <Input
+                          id="register-name"
+                          type="text"
+                          placeholder="Juan"
+                          className="pl-10"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                          required
+                        />
                       </div>
                     </div>
 
@@ -154,7 +241,14 @@ export default function AuthPage() {
                       <Label htmlFor="register-lastname" className="text-sm font-medium text-slate-700">
                         Apellido
                       </Label>
-                      <Input id="register-lastname" type="text" placeholder="Pérez" required />
+                      <Input
+                        id="register-lastname"
+                        type="text"
+                        placeholder="Pérez"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        required
+                      />
                     </div>
                   </div>
 
@@ -164,7 +258,15 @@ export default function AuthPage() {
                     </Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                      <Input id="register-email" type="email" placeholder="tu@email.com" className="pl-10" required />
+                      <Input
+                        id="register-email"
+                        type="email"
+                        placeholder="tu@email.com"
+                        className="pl-10"
+                        value={registerEmail}
+                        onChange={(e) => setRegisterEmail(e.target.value)}
+                        required
+                      />
                     </div>
                   </div>
 
@@ -174,7 +276,14 @@ export default function AuthPage() {
                     </Label>
                     <div className="relative">
                       <Phone className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                      <Input id="register-phone" type="tel" placeholder="+54 376 123-4567" className="pl-10" />
+                      <Input
+                        id="register-phone"
+                        type="tel"
+                        placeholder="+54 376 123-4567"
+                        className="pl-10"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                      />
                     </div>
                   </div>
 
@@ -189,6 +298,8 @@ export default function AuthPage() {
                         type={showPassword ? "text" : "password"}
                         placeholder="••••••••"
                         className="pl-10 pr-10"
+                        value={registerPassword}
+                        onChange={(e) => setRegisterPassword(e.target.value)}
                         required
                       />
                       <button
@@ -212,6 +323,8 @@ export default function AuthPage() {
                         type={showConfirmPassword ? "text" : "password"}
                         placeholder="••••••••"
                         className="pl-10 pr-10"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                         required
                       />
                       <button
